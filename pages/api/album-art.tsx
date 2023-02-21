@@ -19,7 +19,6 @@ const karlaRegularFont = fetchFont(new URL('../../assets/Karla-Regular.ttf', imp
 const inconsolataBoldFont = fetchFont(new URL('../../assets/Inconsolata-Bold.ttf', import.meta.url));
 const inconsolataRegularFont = fetchFont(new URL('../../assets/Inconsolata-Regular.ttf', import.meta.url));
 
-
 export default async function handler(req: NextRequest) {
   const karlaBoldFontData = await karlaBoldFont;
   const karlaRegularFontData = await karlaRegularFont;
@@ -29,28 +28,68 @@ export default async function handler(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
 
-    const width = parseInt(searchParams.get('width') ?? '3000');
-    const height = parseInt(searchParams.get('height') ?? '3000');
-    const title = searchParams.get('title') ?? 'My Default Title';
+    const id = searchParams.get('id');
+    const size = searchParams.get('size');
+    const dimensions = size ? parseInt(size) : 3000;
+
+    if (id === null) {
+      throw new Error(`No 'id' found`);
+    }
+
+    const recordResp = await fetch(`https://api.coffeeandcode.app/api/collections/tracks/records/${id}`);
+    const recordJson = await recordResp.json();
+
+
+    // @NOTE using relative font's here to cater to size 
+    const titleSize = dimensions * 0.075;
+    const logoPrefixSize = dimensions * 0.15;
+    const logoSuffixSize = dimensions * 0.175;
+    const episodeNumberSize = dimensions * 0.05;
 
     return new ImageResponse(
       (
         <div
-          tw="flex w-full items-center h-full justify-between"
+          tw="flex flex-col w-full h-full items-center justify-around bg-white"
         >
           <p
-            tw="text-6xl leading-tight my-0"
+            tw="text-black"
             style={{
+              fontSize: episodeNumberSize,
+              fontFamily: 'Karla',
+            }}
+          >
+            #{recordJson.episode}
+          </p>
+          <p tw="flex align-center justify-end border-b-2 border-black text-black">
+            <span style={{
+              fontSize: logoPrefixSize,
+              fontFamily: 'Inconsolata',
+            }}>
+              Runtime
+            </span>
+            <span 
+              tw="font-bold"
+              style={{
+              fontSize: logoSuffixSize,
+              fontFamily: 'Karla',
+            }}>
+              FM
+            </span>
+          </p>
+          <p
+            tw="text-black text-right font-bold"
+            style={{
+              fontSize: titleSize,
               fontFamily: 'Inconsolata',
             }}
           >
-            {title}
+            {recordJson.title}
           </p>
         </div>
       ),
       {
-        width,
-        height,
+        width: dimensions,
+        height: dimensions,
         fonts: [
           {
             name: 'Karla',
