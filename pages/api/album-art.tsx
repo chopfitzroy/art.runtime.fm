@@ -41,6 +41,8 @@ export default async function handler(req: NextRequest) {
 
 
     // @NOTE using relative font's here to cater to size 
+    const border = dimensions * 0.0025;
+    const spacing = dimensions * 0.05;
     const titleSize = dimensions * 0.075;
     const logoPrefixSize = dimensions * 0.15;
     const logoSuffixSize = dimensions * 0.175;
@@ -50,34 +52,54 @@ export default async function handler(req: NextRequest) {
       (
         <div
           tw="flex flex-col w-full h-full items-center justify-around bg-white"
+          style={{ padding: spacing }}
         >
           <p
-            tw="text-black"
-            style={{
-              fontSize: episodeNumberSize,
-              fontFamily: 'Karla',
-            }}
+            tw="mr-auto flex items-center"
           >
-            #{recordJson.episode}
+            <span tw="font-bold"
+              style={{
+                marginRight: spacing / 2,
+                fontSize: episodeNumberSize,
+                fontFamily: 'Inconsolata',
+              }}>
+              Episode
+            </span>
+            <span tw="inline-block text-white bg-black"
+              style={{
+                paddingTop: spacing / 4,
+                paddingLeft: spacing / 2,
+                paddingRight: spacing / 2,
+                paddingBottom: spacing / 4,
+                fontFamily: 'Karla',
+                fontSize: episodeNumberSize,
+              }}>
+              #{recordJson.episode}
+            </span>
           </p>
-          <p tw="flex align-center justify-end border-b-2 border-black text-black">
+          <p tw="flex items-end text-black border-black"
+            style={{
+              transform: 'rotate(-2deg)',
+              marginBottom: spacing,
+              borderBottomWidth: border
+            }}>
             <span style={{
               fontSize: logoPrefixSize,
               fontFamily: 'Inconsolata',
             }}>
               Runtime
             </span>
-            <span 
+            <span
               tw="font-bold"
               style={{
-              fontSize: logoSuffixSize,
-              fontFamily: 'Karla',
-            }}>
+                fontSize: logoSuffixSize,
+                fontFamily: 'Karla',
+              }}>
               FM
             </span>
           </p>
           <p
-            tw="text-black text-right font-bold"
+            tw="ml-auto text-black text-right"
             style={{
               fontSize: titleSize,
               fontFamily: 'Inconsolata',
