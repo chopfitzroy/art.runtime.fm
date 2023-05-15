@@ -6,6 +6,8 @@ export const config = {
   runtime: 'experimental-edge',
 }
 
+const ADMIN_DOMAIN = 'https://admin.runtime.fm';
+
 const fetchFont = async (url: URL) => {
   const res = await fetch(url);
   return res.arrayBuffer();
@@ -36,7 +38,7 @@ export default async function handler(req: NextRequest) {
       throw new Error(`No 'id' found`);
     }
 
-    const recordResp = await fetch(`https://api.coffeeandcode.app/api/collections/tracks/records/${id}`);
+    const recordResp = await fetch(`${ADMIN_DOMAIN}/api/collections/tracks/records/${id}`);
     const recordJson = await recordResp.json();
 
 
